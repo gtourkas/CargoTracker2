@@ -1,0 +1,12 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+nuget:
+  project_feed: true
+before_build:
+- cmd: nuget restore
+build:
+  verbosity: minimal
+test:
+  assemblies:
+    only:
+    - '*.Tests.dll'
