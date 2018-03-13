@@ -7,9 +7,6 @@ namespace Domain.Shipping.Cargo
 
         public TrackingId(System.Guid value)
         {
-            if (value == null)
-                throw new ArgumentNullException("value");
-
             Value = value;
         }
 

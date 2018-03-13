@@ -1,5 +1,5 @@
-﻿using Domain.Shipping.Cargo.Events;
-using System;
+﻿using System;
+using Domain.Shipping.Cargo.Events;
 
 namespace Domain.Shipping.Cargo
 {
@@ -16,29 +16,30 @@ namespace Domain.Shipping.Cargo
 
         public HandlingEvent LastHandlingEvent { get; private set; }
 
-
         public Cargo(TrackingId trackingId, RouteSpecification routeSpec)
         {
-            if (trackingId == null)
-                throw new ArgumentNullException("trackingId");
-
-            if (routeSpec == null)
-                throw new ArgumentNullException("routeSpec");
-
-            TrackingId = trackingId;
-            RouteSpec = routeSpec;
+            TrackingId = trackingId ?? throw new ArgumentNullException(nameof(trackingId));
+            RouteSpec = routeSpec ?? throw new ArgumentNullException(nameof(routeSpec));
 
             Delivery = new Delivery(RouteSpec, null, null);
 
             this.Events.Add(new NewBooked(trackingId, routeSpec));
         }
 
+        // rehydration ctor
+        public Cargo(TrackingId trackingId, RouteSpecification routeSpec, Itinerary itinerary, Delivery delivery, HandlingEvent lastHandlingEvent)
+        {
+            TrackingId = trackingId;
+            RouteSpec = routeSpec;
+            Itinerary = itinerary;
+            LastHandlingEvent = lastHandlingEvent;
+
+            Delivery = new Delivery(RouteSpec, Itinerary, LastHandlingEvent);
+        }
+
         public void AssignToItinerary(Itinerary itinerary)
         {
-            if (itinerary == null)
-                throw new ArgumentNullException("itinerary");
-
-            Itinerary = itinerary;
+            Itinerary = itinerary ?? throw new ArgumentNullException(nameof(itinerary));
 
             Delivery = new Delivery(RouteSpec, Itinerary, LastHandlingEvent);
 
@@ -48,10 +49,7 @@ namespace Domain.Shipping.Cargo
 
         public void ChangeRoute(RouteSpecification routeSpec)
         {
-            if (routeSpec == null)
-                throw new ArgumentNullException("routeSpec");
-
-            RouteSpec = routeSpec;
+            RouteSpec = routeSpec ?? throw new ArgumentNullException(nameof(routeSpec));
 
             Delivery = new Delivery(RouteSpec, Itinerary, LastHandlingEvent);
 
@@ -61,10 +59,7 @@ namespace Domain.Shipping.Cargo
 
         public void RegisterHandlingEvent(HandlingEvent @event)
         {
-            if (@event == null)
-                throw new ArgumentNullException("event");
-
-            LastHandlingEvent = @event;
+            LastHandlingEvent = @event ?? throw new ArgumentNullException(nameof(@event));
 
             Delivery = new Delivery(RouteSpec, Itinerary, LastHandlingEvent);
 

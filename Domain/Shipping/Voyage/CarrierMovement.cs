@@ -1,5 +1,5 @@
-﻿using Domain.Shipping.Location;
-using System;
+﻿using System;
+using Domain.Shipping.Location;
 
 namespace Domain.Shipping.Voyage
 {

@@ -1,17 +1,15 @@
-﻿using Domain.Shipping.Cargo;
+﻿using System;
+using System.Reflection;
+using AutoFixture;
+using AutoFixture.Kernel;
+using AutoFixture.Xunit2;
+using Domain.Shipping.Cargo;
 using Domain.Shipping.Location;
 using Domain.Shipping.Voyage;
-using Ploeh.AutoFixture;
-using Ploeh.AutoFixture.Kernel;
-using Ploeh.AutoFixture.Xunit2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Sdk;
+
+#pragma warning disable CS0618
 
 namespace Domain.Tests.Shipping.Cargo
 {

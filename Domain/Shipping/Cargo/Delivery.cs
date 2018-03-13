@@ -1,6 +1,6 @@
-﻿using Domain.Shipping.Location;
+﻿using System;
+using Domain.Shipping.Location;
 using Domain.Shipping.Voyage;
-using System;
 
 namespace Domain.Shipping.Cargo
 {
@@ -32,10 +32,7 @@ namespace Domain.Shipping.Cargo
             HandlingEvent lastHandlingEvent
             )
         {
-            if (routeSpec == null)
-                throw new ArgumentNullException("routeSpec");
-
-            RouteSpec = routeSpec;
+            RouteSpec = routeSpec ?? throw new ArgumentNullException(nameof(routeSpec));
             Itinerary = itinerary;
             LastHandlingEvent = lastHandlingEvent;
 

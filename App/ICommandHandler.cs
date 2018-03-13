@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace App
 {
-    public interface ICommandHandlerFactory<T> : IHandlerFactory<T> where T: class, ICommand
+    public interface ICommandHandlerFactory<T> where T: class, ICommand
     { 
     }
 
-    public interface ICommandHandler<T> : IHandler<T> where T : class, ICommand 
+    public interface ICommandHandler<T> where T : class, ICommand 
     {
     }
 }

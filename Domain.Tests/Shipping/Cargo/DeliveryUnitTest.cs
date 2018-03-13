@@ -1,20 +1,18 @@
 ﻿using System;
+using System.Collections.Generic;
+using AutoFixture.Xunit2;
 using Domain.Shipping.Cargo;
 using Domain.Shipping.Location;
 using Domain.Shipping.Voyage;
 using Moq;
-using Ploeh.AutoFixture.Xunit2;
 using Xunit;
-using Domain.Shipping;
-using Ploeh.AutoFixture;
-using System.Collections.Generic;
 
 namespace Domain.Tests.Shipping.Cargo
 {
     public class DeliveryUnitTest   
     {
         [Fact]
-        public void Ctor_NoRoutSpec_ThrowsArgumentNullException()
+        public void Ctor__NoRoutSpecGiven__ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() => new Delivery(null, null, null));
         }
@@ -23,10 +21,9 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_NoEvent_TransportStatusNoReceived(
+        public void Ctor__NoEventGiven_TransportStatusSetToNoReceived(
             RouteSpecification routeSpec
             , Itinerary itinerary
-            , HandlingEvent @event
         )
         {
             // ACT
@@ -43,7 +40,7 @@ namespace Domain.Tests.Shipping.Cargo
         [InlineAutoCargoData(HandlingType.Customs, TransportStatus.InPort)]
         [InlineAutoCargoData(HandlingType.Claim, TransportStatus.Claimed)]
         [InlineAutoCargoData(HandlingType.Unload, TransportStatus.InPort)]
-        public void Ctor_HandlingTypeToTransportStatus(
+        public void Ctor_HandlingTypeMappedToTransportStatusCorrectly(
             HandlingType type
             , TransportStatus status
             , RouteSpecification routeSpec
@@ -66,9 +63,9 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_NoItinerary_NotRouted(
+        public void Ctor__NoItineraryGiven__RoutingStatusSetToNotRouted(
             RouteSpecification routeSpec
-            , Itinerary itinerary)
+            )
         {
             // ACT
             var sut = new Delivery(routeSpec, null, null);
@@ -79,7 +76,7 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_RouteSpecSatifiedByItinerary_Routed(
+        public void Ctor__RouteSpecGivenSatifiedByItineraryGiven__RoutingStatusSetToRouted(
             Mock<IRouteSpecification> routeSpec
             , Itinerary itinerary)
         {
@@ -95,7 +92,7 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_RouteSpecNotSatifiedByItinerary_MisRouted(
+        public void Ctor__RouteSpecGivenNotSatifiedByItineraryGiven__RoutingStatusSetToMisRouted(
             Mock<IRouteSpecification> routeSpec
             , Itinerary itinerary)
         {
@@ -115,7 +112,7 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_NoEvent_NoLastKnownLocation(
+        public void Ctor__NoEventGiven__LastKnownLocationSetToNone(
             RouteSpecification routeSpec
             , Itinerary itinerary)
         {
@@ -123,12 +120,12 @@ namespace Domain.Tests.Shipping.Cargo
             var sut = new Delivery(routeSpec, itinerary, null);
 
             // ASSERT
-            Assert.Equal(null, sut.LastKnownLocation);
+            Assert.Null(sut.LastKnownLocation);
         }
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_WithEvent_LastKnownLocationIsEventsLocation(
+        public void Ctor__EventGiven__LastKnownLocationIsSetToEventLocation(
             RouteSpecification routeSpec
           , Itinerary itinerary
           , HandlingEvent @event)
@@ -146,22 +143,21 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_NoEvent_NoCurrentVoyage(
+        public void Ctor__NoEventGiven__CurrentVoyageSetToNone(
             RouteSpecification routeSpec
-            , Itinerary itinerary
-            , HandlingEvent @event)
+            , Itinerary itinerary)
         {
             // ACT
             var sut = new Delivery(routeSpec, itinerary, null);
 
             // ASSERT
-            Assert.Equal(null, sut.CurrentVoyage);
+            Assert.Null(sut.CurrentVoyage);
         }
 
         [Theory]
         [InlineAutoCargoData(HandlingType.Claim)]
         [InlineAutoCargoData(HandlingType.Customs)]
-        public void Ctor_EventWithNoVoyageNumber_NoCurrentVoyage(
+        public void Ctor__EventWithNoVoyageNumber_CurrentVoyageSetToNone(
             HandlingType type
             , RouteSpecification routeSpec
             , Itinerary itinerary
@@ -176,12 +172,12 @@ namespace Domain.Tests.Shipping.Cargo
             var sut = new Delivery(routeSpec, itinerary, @event);
 
             // ASSERT
-            Assert.Equal(null, sut.CurrentVoyage);
+            Assert.Null(sut.CurrentVoyage);
         }
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_EventWithVoyageNumber_CurrentVoyageIsEventVoyage(
+        public void Ctor__EventWithNoVoyageNumber_CurrentVoyageIsSetToEventVoyage(
             RouteSpecification routeSpec
             , Itinerary itinerary
             , HandlingEvent @event)
@@ -199,7 +195,7 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_NoItinerary_NoActivity(
+        public void Ctor__NoItineraryGiven__NextExpectedActivitySetToNone(
             RouteSpecification routeSpec
             , HandlingEvent @event)
         {
@@ -207,12 +203,12 @@ namespace Domain.Tests.Shipping.Cargo
             var sut = new Delivery(routeSpec, null, @event);
 
             // ASSERT
-            Assert.Equal(null, sut.NextExpectedHandlingActivity);
+            Assert.Null(sut.NextExpectedHandlingActivity);
         }
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_MisRouted_NoActivity(
+        public void Ctor__RouteSpecNotSatisifiedByItinerary__NextExpectedActivitySetToNone(
             Mock<IRouteSpecification> routeSpec,
             Itinerary itinerary,
             HandlingEvent @event,
@@ -226,13 +222,13 @@ namespace Domain.Tests.Shipping.Cargo
             var sut = new Delivery(routeSpec.Object, itinerary, @event);
 
             // ASSERT
-            Assert.Equal(null, sut.NextExpectedHandlingActivity);
+            Assert.Null(sut.NextExpectedHandlingActivity);
         }
 
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_LastHandlingEventIsReceive_NextIsLoadAtItineraryFirstLoadLocationForFirstVoyage(
+        public void Ctor__LastHandlingEventGivenIsReceived__NextExpectedActivitySetToLoad_AtItineraryFirstLoadLocation_ForFirstVoyage(
             Mock<IRouteSpecification> routeSpec,
             Itinerary itinerary,
             HandlingEvent @event,
@@ -255,7 +251,7 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_LastHandlingEventIsLoad_NextIsInUnloadAtSameLegUnloadLocationForLegsVoyage(
+        public void Ctor__LastHandlingEventGivenHasTypeLoad__NextExpectedActivitySetToUnload_AtSameLegUnloadLocation_ForLegsVoyage(
             Mock<IRouteSpecification> routeSpec,
             Mock<IItinerary> itinerary,
             HandlingEvent @event,
@@ -281,12 +277,11 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_LastHandlingEventIsUnloadOnItineraryLastUnloadLocation_NextIsCustomsOnSameLocationWithNoVoyage(
+        public void Ctor__LastHandlingEventGivenIsUnloadOnItineraryLastUnloadLocation__NextExpectedActivitySetToCustomsOnSameLocationWithNoVoyage(
             Mock<IRouteSpecification> routeSpec,
             Itinerary itinerary,
             HandlingEvent @event,
-            UnLocode location,
-            Leg leg)
+            UnLocode location)
         {
             // ARRANGE
             @event = @event.RecreateWith(HandlingType.Unload)
@@ -301,12 +296,12 @@ namespace Domain.Tests.Shipping.Cargo
             // ASSERT
             Assert.Equal(HandlingType.Customs, sut.NextExpectedHandlingActivity.Type);
             Assert.Equal(itinerary.LastUnloadLocation, sut.NextExpectedHandlingActivity.Location);
-            Assert.Equal(null, sut.NextExpectedHandlingActivity.Voyage);
+            Assert.Null(sut.NextExpectedHandlingActivity.Voyage);
         }
 
         [Theory]
         [AutoCargoData]
-        public void Ctor_LastHandlingEventIsUnloadOnIntermediateLeg_NextIsLoadToNextLegLoadLocationAndVoyage(
+        public void Ctor__LastHandlingEventGvivenIsUnloadOnIntermediateLeg__NextIsLoadToNextLegLoadLocationAndVoyage(
             Mock<IRouteSpecification> routeSpec,
             Itinerary itinerary,
             HandlingEvent @event,
@@ -351,7 +346,7 @@ namespace Domain.Tests.Shipping.Cargo
             // ASSERT
             Assert.Equal(HandlingType.Claim, sut.NextExpectedHandlingActivity.Type);
             Assert.Equal(itinerary.LastUnloadLocation, sut.NextExpectedHandlingActivity.Location);
-            Assert.Equal(null, sut.NextExpectedHandlingActivity.Voyage);
+            Assert.Null(sut.NextExpectedHandlingActivity.Voyage);
         }
 
 
@@ -373,7 +368,7 @@ namespace Domain.Tests.Shipping.Cargo
             var sut = new Delivery(routeSpec.Object, itinerary, @event);
 
             // ASSERT
-            Assert.Equal(null, sut.NextExpectedHandlingActivity);
+            Assert.Null(sut.NextExpectedHandlingActivity);
         }
 
         #endregion
@@ -390,7 +385,7 @@ namespace Domain.Tests.Shipping.Cargo
             var sut = new Delivery(routeSpec, itinerary, null);
 
             // ASSERT
-            Assert.Equal(false, sut.IsUnloadedAtDestination);
+            Assert.False(sut.IsUnloadedAtDestination);
         }
 
         [Theory]
@@ -409,7 +404,7 @@ namespace Domain.Tests.Shipping.Cargo
             var sut = new Delivery(routeSpec, itinerary, @event);
 
             // ASSERT
-            Assert.Equal(true, sut.IsUnloadedAtDestination);
+            Assert.True(sut.IsUnloadedAtDestination);
         }
 
         #endregion
@@ -426,7 +421,7 @@ namespace Domain.Tests.Shipping.Cargo
             var sut = new Delivery(routeSpec, null, @event);
 
             // ASSERT
-            Assert.Equal(false, sut.IsMishandled);
+            Assert.False(sut.IsMishandled);
         }
 
 
@@ -440,7 +435,7 @@ namespace Domain.Tests.Shipping.Cargo
             var sut = new Delivery(routeSpec, itinerary, null);
 
             // ASSERT
-            Assert.Equal(false, sut.IsMishandled);
+            Assert.False(sut.IsMishandled);
         }
 
         [Theory]
@@ -466,7 +461,7 @@ namespace Domain.Tests.Shipping.Cargo
             var sut = new Delivery(routeSpec.Object, itinerary.Object, @event);
 
             // ASSERT
-            Assert.Equal(false, sut.IsMishandled);
+            Assert.False(sut.IsMishandled);
         }
 
         #endregion

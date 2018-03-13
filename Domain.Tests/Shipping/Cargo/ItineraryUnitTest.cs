@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Domain.Shipping.Cargo;
-using Domain.Shipping.Location;
-using Domain.Shipping.Voyage;
-using Ploeh.AutoFixture.Xunit2;
 using Xunit;
-using Domain.Shipping;
-using Ploeh.AutoFixture;
 
 namespace Domain.Tests.Shipping.Cargo
 {
@@ -27,7 +21,7 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void Ctor(Itinerary sut, List<Leg> legs)
+        public void Ctor(List<Leg> legs)
         {
             // ACT
             var itinerary = new Itinerary(legs);
@@ -48,7 +42,7 @@ namespace Domain.Tests.Shipping.Cargo
             var r = sut.IsExpected(null);
 
             // ASSERT
-            Assert.Equal(true, r);
+            Assert.True(r);
         }
 
         [Theory]
@@ -65,7 +59,7 @@ namespace Domain.Tests.Shipping.Cargo
             var r = sut.IsExpected(@event);
 
             // ASSERT
-            Assert.Equal(true, r);
+            Assert.True(r);
         }
 
         [Theory]
@@ -86,7 +80,7 @@ namespace Domain.Tests.Shipping.Cargo
                 var r = sut.IsExpected(@event);
 
                 // ASSERT
-                Assert.Equal(true, r);
+                Assert.True(r);
             }
         }
 
@@ -108,7 +102,7 @@ namespace Domain.Tests.Shipping.Cargo
                 var r = sut.IsExpected(@event);
 
                 // ASSERT
-                Assert.Equal(true, r);
+                Assert.True(r);
             }
         }
 
@@ -129,7 +123,7 @@ namespace Domain.Tests.Shipping.Cargo
             var r = sut.IsExpected(@event);
 
             // ASSERT
-            Assert.Equal(true, r);
+            Assert.True(r);
         }
 
         [Theory]
@@ -156,7 +150,7 @@ namespace Domain.Tests.Shipping.Cargo
             var l = sut.NextOf(sut.LastUnloadLocation);
 
             // ASSERT
-            Assert.Equal(null, l);
+            Assert.Null(l);
         }
 
         [Theory]

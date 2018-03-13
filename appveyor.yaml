@@ -3,7 +3,11 @@ image: Visual Studio 2017
 nuget:
   project_feed: true
 before_build:
-- cmd: nuget restore
+  - cmd: nuget restore
+cache:
+  - packages -> **\packages.config 
+  - '%LocalAppData%\NuGet\Cache'    # NuGet < v3
+  - '%LocalAppData%\NuGet\v3-cache' # NuGet v3
 build:
   verbosity: minimal
 test:

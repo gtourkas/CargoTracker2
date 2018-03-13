@@ -9,13 +9,13 @@ namespace App
 {
     public interface IEventDispatcher
     {
-        void Dispatch(IEvent domainEvent);
-        void Dispatch(IEnumerable<IEvent> domainEvents);
+        Task DispatchAsync(IEvent @event);
+        Task DispatchAsync(IEnumerable<IEvent> events);
     }
 
     public class EventDispatcher : IEventDispatcher
     {
-        private IDictionary<Type, IList<Action<object>>> _handlers = new Dictionary<Type, IList<Action<object>>>();
+        private readonly IDictionary<Type, IList<Action<object>>> _handlers = new Dictionary<Type, IList<Action<object>>>();
 
         public void Register<T>(IEventHandlerFactory<T> handlerFactory) where T : class, IEvent
         {
@@ -75,21 +75,20 @@ namespace App
         }
 
 
-        public void Dispatch(IEvent @event)
+        public async Task DispatchAsync(IEvent @event)
         {
             var t = @event.GetType();
             if (_handlers.ContainsKey(t)) {
                 foreach (var h in _handlers[t])
-                    h(@event);
-                return;
+                    await Task.Run(() => { h(@event); });
             }
         }
 
 
-        public void Dispatch(IEnumerable<IEvent> domainEvents)
+        public async Task DispatchAsync(IEnumerable<IEvent> events)
         {
-            foreach (var e in domainEvents)
-                Dispatch(e);
+            foreach (var e in events)
+                await DispatchAsync(e);
         }
     }
 

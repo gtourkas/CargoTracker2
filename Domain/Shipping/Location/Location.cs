@@ -11,13 +11,11 @@ namespace Domain.Shipping.Location
 
         public Location(UnLocode unLocode, string name)
         {
-            if (unLocode == null)
-                throw new ArgumentNullException("unLocode");
+            UnLocode = unLocode ?? throw new ArgumentNullException(nameof(unLocode));
 
             if (String.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("Provided name is not valid", "name");
 
-            UnLocode = unLocode;
             Name = name;
         }
     }

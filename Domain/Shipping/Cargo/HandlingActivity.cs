@@ -1,6 +1,6 @@
-﻿using Domain.Shipping.Location;
+﻿using System;
+using Domain.Shipping.Location;
 using Domain.Shipping.Voyage;
-using System;
 
 namespace Domain.Shipping.Cargo
 {
@@ -16,8 +16,7 @@ namespace Domain.Shipping.Cargo
             , UnLocode location
             , VoyageNumber voyage)
         {
-            if (location == null)
-                throw new ArgumentNullException("location");
+            Location = location ?? throw new ArgumentNullException(nameof(location));
 
             if (type == HandlingType.Load && voyage == null)
                 throw new InvalidOperationException("a load activity needs a voyage");
@@ -26,7 +25,6 @@ namespace Domain.Shipping.Cargo
                 throw new InvalidOperationException("an unload activity needs a voyage");
 
             Type = type;
-            Location = location;
             Voyage = voyage;
         }
     }

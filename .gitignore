@@ -2,4 +2,34 @@
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
 
+/.vs
 /tmp/Domain.Tests
+/tmp2/Domain.Tests
+/Web/bin
+/Web/obj
+/_NCrunch_CargoTracker
+/CargoTracker.v3.ncrunchsolution.user
+/CargoTracker.v3.ncrunchsolution
+/._.gitignore
+/._README.md
+/Web/Web.v3.ncrunchproject
+/Infra.MongoDB.Tests/obj
+/Infra.MongoDB/obj
+/Infra.MongoDB/Infra.MongoDB.v3.ncrunchproject
+
+/Infra.MassTransit/bin
+/Infra.MassTransit/obj
+/Infra.MassTransit/Infra.MassTransit.v3.ncrunchproject
+
+/Domain.Tests/obj
+/Domain.Tests/Domain.Tests.v3.ncrunchproject
+
+/App.Vessel.Monitor.Host/obj
+/App.Vessel.Monitor.Host/App.Vessel.Monitor.Host.v3.ncrunchproject
+/App.Tests/obj
+/Domain/obj
+/Infra.MongoDB.Tests/Infra.MongoDB.Tests.v3.ncrunchproject.user
+/Infra.MongoDB.Tests/Infra.MongoDB.Tests.v3.ncrunchproject
+/Infra.MongoDB.Tests/Infra.MongoDB.Tests.csproj.user
+/App/obj
+/App/App.v3.ncrunchproject

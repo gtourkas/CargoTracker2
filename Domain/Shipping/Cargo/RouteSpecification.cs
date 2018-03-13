@@ -1,5 +1,5 @@
-﻿using Domain.Shipping.Location;
-using System;
+﻿using System;
+using Domain.Shipping.Location;
 
 namespace Domain.Shipping.Cargo
 {
@@ -20,17 +20,14 @@ namespace Domain.Shipping.Cargo
 
         public RouteSpecification(UnLocode origin, UnLocode destination, DateTime arrivalDeadline)
         {
-            if (origin == null)
-                throw new ArgumentNullException(nameof(origin));
 
-            if (destination == null)
-                throw new ArgumentNullException(nameof(destination));
+            Origin = origin ?? throw new ArgumentNullException(nameof(origin));
+
+            Destination = destination ?? throw new ArgumentNullException(nameof(destination));
 
             if (origin.Equals(destination))
                 throw new InvalidOperationException("Provided origin and destination are the same");
 
-            Origin = origin;
-            Destination = destination;
             ArrivalDeadline = arrivalDeadline;
         }
 

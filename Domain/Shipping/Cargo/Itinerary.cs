@@ -1,9 +1,9 @@
-﻿using Domain.Shipping.Location;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using Domain.Shipping.Voyage;
 using System.Collections.ObjectModel;
+using System.Linq;
+using Domain.Shipping.Location;
+using Domain.Shipping.Voyage;
 
 namespace Domain.Shipping.Cargo
 {
@@ -27,7 +27,7 @@ namespace Domain.Shipping.Cargo
         public Itinerary(IList<Leg> legs)
         {
             if (legs == null)
-                throw new ArgumentNullException("legs");
+                throw new ArgumentNullException(nameof(legs));
             if (legs.Count == 0)
                 throw new ArgumentException("legs cannot be empty");
 
@@ -69,25 +69,27 @@ namespace Domain.Shipping.Cargo
         public Leg NextOf(UnLocode location)
         {
             var next = (Leg)null;
-            var en = Legs.GetEnumerator();
             var currentFound = false;
-            while (en.MoveNext())
-            {
-                if (currentFound)
+
+            using (var en = Legs.GetEnumerator())
+                while (en.MoveNext())
                 {
-                    next = en.Current;
-                    break;
+                    if (currentFound)
+                    {
+                        next = en.Current;
+                        break;
+                    }
+                    if (en.Current.LoadLocation.Equals(location) || en.Current.UnloadLocation.Equals(location))
+                        currentFound = true;
                 }
-                if (en.Current.LoadLocation.Equals(location) || en.Current.UnloadLocation.Equals(location))
-                    currentFound = true;
-            }
+
             return next;
         }
 
         public Leg Of(UnLocode location)
         {
-            return Legs.Where(l => l.UnloadLocation.Equals(location) || l.LoadLocation.Equals(location))
-                .FirstOrDefault();
+            return Legs
+                .FirstOrDefault(l => l.UnloadLocation.Equals(location) || l.LoadLocation.Equals(location));
         }
 
         public bool IsExpected(HandlingEvent @event) {

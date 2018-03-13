@@ -1,13 +1,8 @@
-﻿using Domain.Shipping;
+﻿using System;
+using AutoFixture.Xunit2;
 using Domain.Shipping.Cargo;
 using Domain.Shipping.Location;
 using Moq;
-using Ploeh.AutoFixture.Xunit2;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Domain.Tests.Shipping.Cargo
@@ -52,7 +47,7 @@ namespace Domain.Tests.Shipping.Cargo
             var r = sut.IsSatisfiedBy(itinerary);
 
             // ASSERT
-            Assert.Equal(false, r);
+            Assert.False(r);
         }
 
         [Theory]
@@ -71,7 +66,7 @@ namespace Domain.Tests.Shipping.Cargo
             var r = sut.IsSatisfiedBy(itinerary.Object);
 
             // ASSERT
-            Assert.Equal(false, r);
+            Assert.False(r);
         }
 
         [Theory]
@@ -90,7 +85,7 @@ namespace Domain.Tests.Shipping.Cargo
             var r = sut.IsSatisfiedBy(itinerary.Object);
 
             // ASSERT
-            Assert.Equal(false, r);
+            Assert.False(r);
         }
 
 
@@ -110,7 +105,7 @@ namespace Domain.Tests.Shipping.Cargo
             var r = sut.IsSatisfiedBy(itinerary.Object);
 
             // ASSERT
-            Assert.Equal(true, r);
+            Assert.True(r);
         }
     }
 }

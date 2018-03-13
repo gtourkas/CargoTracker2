@@ -1,6 +1,6 @@
-﻿using Domain.Shipping.Location;
+﻿using System;
+using Domain.Shipping.Location;
 using Domain.Shipping.Voyage;
-using System;
 
 namespace Domain.Shipping.Cargo
 {
@@ -22,22 +22,15 @@ namespace Domain.Shipping.Cargo
             DateTime loadTime,
             DateTime unloadTime)
         {
+            Voyage = voyage ?? throw new ArgumentNullException(nameof(voyage));
 
-            if (voyage == null)
-                throw new ArgumentNullException("voyage");
+            LoadLocation = loadLocation ?? throw new ArgumentNullException(nameof(loadLocation));
 
-            if (loadLocation == null)
-                throw new ArgumentNullException("loadLocation");
-
-            if (unloadLocation == null)
-                throw new ArgumentNullException("unloadLocation");
+            UnloadLocation = unloadLocation ?? throw new ArgumentNullException(nameof(unloadLocation));
 
             if (loadTime >= unloadTime)
                 throw new ArgumentException("unloadTime should be later than loadTime");
 
-            Voyage = voyage;
-            LoadLocation = loadLocation;
-            UnloadLocation = unloadLocation;
             LoadTime = loadTime;
             UnloadTime = unloadTime;
         }

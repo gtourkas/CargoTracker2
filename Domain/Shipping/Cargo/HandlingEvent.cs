@@ -1,6 +1,6 @@
-﻿using Domain.Shipping.Location;
+﻿using System;
+using Domain.Shipping.Location;
 using Domain.Shipping.Voyage;
-using System;
 
 namespace Domain.Shipping.Cargo
 {
@@ -27,21 +27,15 @@ namespace Domain.Shipping.Cargo
             , DateTime completed
             , DateTime registered)
         {
-            if (trackingId == null)
-                throw new ArgumentNullException("trackingId");
-
-            if (location == null)
-                throw new ArgumentNullException("location");
-
             if ((type == HandlingType.Load || type == HandlingType.Unload)
                 &&
                 (voyage == null)
                )
                 throw new InvalidOperationException("loading/unloading events need a voyage");
 
-            TrackingId = trackingId;
+            TrackingId = trackingId ?? throw new ArgumentNullException(nameof(trackingId));
+            Location = location ?? throw new ArgumentNullException(nameof(location));
             Type = type;
-            Location = location;
             Voyage = voyage;
             Completed = completed;
             Registered = registered;

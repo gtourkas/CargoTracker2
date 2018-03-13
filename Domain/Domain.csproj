@@ -1,88 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F352D0D6-99E3-438D-89D0-BB278A8755DD}</ProjectGuid>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <ApplicationIcon />
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Domain</RootNamespace>
-    <AssemblyName>Domain</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
+    <StartupObject />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <None Remove="Domain.v3.ncrunchproject" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="BaseAggregateRoot.cs" />
-    <Compile Include="Shipping\Cargo\Cargo.cs" />
-    <Compile Include="Shipping\Cargo\Events\AssignedToItinerary.cs" />
-    <Compile Include="Shipping\Cargo\Delivery.cs" />
-    <Compile Include="Shipping\Cargo\Events\DeliveryStateChanged.cs" />
-    <Compile Include="Shipping\Cargo\Events\RouteChanged.cs" />
-    <Compile Include="Shipping\Cargo\Events\HandlingEventRegistered.cs" />
-    <Compile Include="Shipping\Cargo\HandlingType.cs" />
-    <Compile Include="Shipping\Cargo\HandlingActivity.cs" />
-    <Compile Include="Shipping\Cargo\ICargoRepository.cs" />
-    <Compile Include="Shipping\Cargo\Itinerary.cs" />
-    <Compile Include="Shipping\Cargo\Leg.cs" />
-    <Compile Include="Shipping\Cargo\Events\NewBooked.cs" />
-    <Compile Include="Shipping\Cargo\RouteSpecification.cs" />
-    <Compile Include="Shipping\Cargo\TrackingId.cs" />
-    <Compile Include="Shipping\Cargo\HandlingEvent.cs" />
-    <Compile Include="Shipping\Cargo\RoutingStatus.cs" />
-    <Compile Include="Shipping\Cargo\TransportStatus.cs" />
-    <Compile Include="IEvent.cs" />
-    <Compile Include="Shipping\IRoutingService.cs" />
-    <Compile Include="Shipping\Location\ILocationRepositoryFactory.cs" />
-    <Compile Include="Shipping\Location\ILocationRepository.cs" />
-    <Compile Include="Shipping\Location\UnLocode.cs" />
-    <Compile Include="Shipping\Location\Location.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Shipping\Voyage\IVoyageRepository.cs" />
-    <Compile Include="Shipping\Voyage\CarrierMovement.cs" />
-    <Compile Include="Shipping\Voyage\Schedule.cs" />
-    <Compile Include="Shipping\Voyage\VesselMMSI.cs" />
-    <Compile Include="Shipping\Voyage\Voyage.cs" />
-    <Compile Include="Shipping\Voyage\VoyageNumber.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Billing\" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

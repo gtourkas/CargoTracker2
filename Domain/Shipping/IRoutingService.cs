@@ -1,5 +1,5 @@
-﻿using Domain.Shipping.Cargo;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Domain.Shipping.Cargo;
 
 namespace Domain.Shipping
 {

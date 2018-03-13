@@ -1,13 +1,8 @@
-﻿using Domain.Shipping;
+﻿using System;
+using AutoFixture.Xunit2;
 using Domain.Shipping.Cargo;
 using Domain.Shipping.Cargo.Events;
-using Ploeh.AutoFixture.Xunit2;
-using SemanticComparison.Fluent;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FluentAssertions;
 using Xunit;
 
 namespace Domain.Tests.Shipping.Cargo
@@ -16,7 +11,7 @@ namespace Domain.Tests.Shipping.Cargo
     {
         [Theory]
         [AutoData]
-        public void Ctor_NoTrackingId_ArgumentNullException(
+        public void Ctor__NoTrackingIdGiven__ThrowsArgumentNullException(
             RouteSpecification routeSpec
             )
         {
@@ -25,7 +20,7 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoData]
-        public void Ctor_NoRouteSpec_ArgumentNullException(
+        public void Ctor__NoRouteSpecGiven__ThrowsArgumentNullException(
             TrackingId trackingId
         )
         {
@@ -34,7 +29,7 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoData]
-        public void Ctor_EmitsNewBookEvent(
+        public void Ctor__EmitsNewBookEvent(
             TrackingId trackingId,
             RouteSpecification routeSpec
         )
@@ -46,14 +41,12 @@ namespace Domain.Tests.Shipping.Cargo
             Assert.Equal(routeSpec, sut.RouteSpec);
             Assert.Equal(routeSpec, sut.Delivery.RouteSpec);
 
-            var expNewBooked = new NewBooked(trackingId, routeSpec)
-                    .AsSource().OfLikeness<NewBooked>();
-            Assert.True(expNewBooked.Equals(sut.Events[0]));
+            sut.Events[0].Should().BeEquivalentTo(new NewBooked(trackingId, routeSpec));
         }
 
         [Theory]
         [AutoData]
-        public void AssignToItinerary_NoItinerary_ThrowsArgumentNullException(
+        public void AssignToItinerary__NoItineraryGiven__ThrowsArgumentNullException(
             Domain.Shipping.Cargo.Cargo sut
         )
         {
@@ -62,7 +55,7 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void AssignToItinerary_EmitsAssignedToItineraryAndDeliveryStateChanged(
+        public void AssignToItinerary__EmitsAssignedToItineraryEvent_and_EmitsDeliveryStateChanged(
             Domain.Shipping.Cargo.Cargo sut,
             Itinerary itinerary
         )
@@ -74,17 +67,13 @@ namespace Domain.Tests.Shipping.Cargo
             Assert.Equal(itinerary, sut.Itinerary);
             Assert.Equal(itinerary, sut.Delivery.Itinerary);
 
-            var expAssignedToItinerary = new AssignedToItinerary(sut.TrackingId, itinerary)
-                .AsSource().OfLikeness<AssignedToItinerary>();
-            Assert.True(expAssignedToItinerary.Equals(sut.Events[1]));
-            var expDeliveryStateChanged = new DeliveryStateChanged(sut.TrackingId, sut.Delivery)
-                .AsSource().OfLikeness<DeliveryStateChanged>();
-            Assert.True(expDeliveryStateChanged.Equals(sut.Events[2]));
+            sut.Events[1].Should().BeEquivalentTo(new AssignedToItinerary(sut.TrackingId, itinerary));
+            sut.Events[2].Should().BeEquivalentTo(new DeliveryStateChanged(sut.TrackingId, sut.Delivery));
         }
 
         [Theory]
         [AutoData]
-        public void ChangeRoute_NoRouteSpec_ThrowsArgumentNullException(
+        public void ChangeRoute__NoRouteSpecGiven__ThrowsArgumentNullException(
                 Domain.Shipping.Cargo.Cargo sut
             )
         {
@@ -93,7 +82,7 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoCargoData]
-        public void ChangeRoute_EmitsAssignedToItineraryAndDeliveryStateChanged(
+        public void ChangeRoute__EmitsAssignedToItineraryEvent_and_EmitsDeliveryStateChangedEvent(
             Domain.Shipping.Cargo.Cargo sut,
             RouteSpecification routeSpec
         )
@@ -105,17 +94,13 @@ namespace Domain.Tests.Shipping.Cargo
             Assert.Equal(routeSpec, sut.RouteSpec);
             Assert.Equal(routeSpec, sut.Delivery.RouteSpec);
 
-            var expRouteChanged = new RouteChanged(sut.TrackingId, routeSpec)
-                .AsSource().OfLikeness<RouteChanged>();
-            Assert.True(expRouteChanged.Equals(sut.Events[1]));
-            var expDeliveryStateChanged = new DeliveryStateChanged(sut.TrackingId, sut.Delivery)
-                .AsSource().OfLikeness<DeliveryStateChanged>();
-            Assert.True(expDeliveryStateChanged.Equals(sut.Events[2]));
+            sut.Events[1].Should().BeEquivalentTo(new RouteChanged(sut.TrackingId, routeSpec));
+            sut.Events[2].Should().BeEquivalentTo(new DeliveryStateChanged(sut.TrackingId, sut.Delivery));
         }
 
         [Theory]
         [AutoCargoData]
-        public void RegisterHandlingEvent_EmitsHandlingEventRegisteredAndDeliveryStateChanged(
+        public void RegisterHandlingEvent__EmitsHandlingEventRegisteredEvent_and_EmitsDeliveryStateChangedEvent(
             Domain.Shipping.Cargo.Cargo sut,
             HandlingEvent @event
         )
@@ -127,12 +112,8 @@ namespace Domain.Tests.Shipping.Cargo
             Assert.Equal(@event, sut.LastHandlingEvent);
             Assert.Equal(@event, sut.Delivery.LastHandlingEvent);
 
-            var expHandlingEventRegistered = new HandlingEventRegistered(@event)
-                .AsSource().OfLikeness<HandlingEventRegistered>();
-            Assert.True(expHandlingEventRegistered.Equals(sut.Events[1]));
-            var expDeliveryStateChanged = new DeliveryStateChanged(sut.TrackingId, sut.Delivery)
-                .AsSource().OfLikeness<DeliveryStateChanged>();
-            Assert.True(expDeliveryStateChanged.Equals(sut.Events[2]));
+            sut.Events[1].Should().BeEquivalentTo(new HandlingEventRegistered(@event));
+            sut.Events[2].Should().BeEquivalentTo(new DeliveryStateChanged(sut.TrackingId, sut.Delivery));
         }
 
     }

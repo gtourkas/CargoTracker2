@@ -8,10 +8,7 @@ namespace Domain.Shipping.Voyage
 
         public VoyageNumber(string value)
         {
-            if (value == null)
-                throw new ArgumentNullException("value");
-
-            Value = value;
+            Value = value ?? throw new ArgumentNullException("value");
         }
 
         public bool Equals(VoyageNumber other)
