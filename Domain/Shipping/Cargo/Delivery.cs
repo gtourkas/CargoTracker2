@@ -6,9 +6,9 @@ namespace Domain.Shipping.Cargo
 {
     public class Delivery 
     {
-        public IRouteSpecification RouteSpec { get; private set; }
+        public RouteSpecification RouteSpec { get; private set; }
 
-        public IItinerary Itinerary { get; private set; }
+        public Itinerary Itinerary { get; private set; }
 
         public HandlingEvent LastHandlingEvent { get; private set; }
 
@@ -27,8 +27,8 @@ namespace Domain.Shipping.Cargo
         public bool IsMishandled { get; private set; }
 
         public Delivery(
-            IRouteSpecification routeSpec,
-            IItinerary itinerary,
+            RouteSpecification routeSpec,
+            Itinerary itinerary,
             HandlingEvent lastHandlingEvent
             )
         {
@@ -70,7 +70,7 @@ namespace Domain.Shipping.Cargo
             }
         }
 
-        private void _calcRoutingStatus(IRouteSpecification routeSpec, IItinerary itinerary)
+        private void _calcRoutingStatus(RouteSpecification routeSpec, Itinerary itinerary)
         {
             if (itinerary == null)
                 RoutingStatus = RoutingStatus.NotRouted;
@@ -96,7 +96,7 @@ namespace Domain.Shipping.Cargo
                 CurrentVoyage = null;
         }
 
-        private void _calcNextExpectedHandlingActivity(IRouteSpecification routeSpec, IItinerary itinerary, HandlingEvent @event)
+        private void _calcNextExpectedHandlingActivity(RouteSpecification routeSpec, Itinerary itinerary, HandlingEvent @event)
         {
             // can't derive next handling activity if there is no itinerary
             if (itinerary == null)
@@ -166,7 +166,7 @@ namespace Domain.Shipping.Cargo
 
         }
 
-        private void _calcIsUnloadedAtDestination(IRouteSpecification routeSpec, HandlingEvent @event)
+        private void _calcIsUnloadedAtDestination(RouteSpecification routeSpec, HandlingEvent @event)
         {
             if (@event == null)
                 IsUnloadedAtDestination = false;
@@ -174,7 +174,7 @@ namespace Domain.Shipping.Cargo
                 IsUnloadedAtDestination = routeSpec.Destination.Equals(@event.Location);
         }
 
-        private void _calcIsMishandled(IItinerary itinerary, HandlingEvent @event)
+        private void _calcIsMishandled(Itinerary itinerary, HandlingEvent @event)
         {
             if (@event == null || itinerary == null)
                 IsMishandled = false;

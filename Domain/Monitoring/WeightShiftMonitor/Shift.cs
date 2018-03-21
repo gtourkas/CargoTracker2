@@ -8,20 +8,20 @@ namespace Domain.Monitoring.WeightShiftMonitor
 
     public class Shift
     {
-        public Percentage FrontSide { get; }
+        public PercentageOffset FrontSide { get; }
 
-        public Percentage RearSide { get; }
+        public PercentageOffset RearSide { get; }
 
-        public Percentage RightSide { get; }
+        public PercentageOffset RightSide { get; }
 
-        public Percentage LeftSide { get; }
+        public PercentageOffset LeftSide { get; }
 
 
         public Directions DirOfLargestShift { get; }
 
-        public Percentage PercOfLargestShift { get; }
+        public PercentageOffset PercOfLargestShift { get; }
 
-        public Shift(Percentage frontSide, Percentage rearSide, Percentage rightSide, Percentage leftSide)
+        public Shift(PercentageOffset frontSide, PercentageOffset rearSide, PercentageOffset rightSide, PercentageOffset leftSide)
         {
             FrontSide = frontSide;
             RearSide = rearSide;
@@ -31,7 +31,7 @@ namespace Domain.Monitoring.WeightShiftMonitor
             DirOfLargestShift = Directions.Front;
             PercOfLargestShift = frontSide;
 
-            var shifts = new List<Percentage> { rearSide, rightSide, leftSide };
+            var shifts = new List<PercentageOffset> { rearSide, rightSide, leftSide };
             for (var i = 1; i < shifts.Count; i++)
             {
                 var s = shifts[i];

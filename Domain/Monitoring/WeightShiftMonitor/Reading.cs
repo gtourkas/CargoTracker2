@@ -13,6 +13,9 @@ namespace Domain.Monitoring.WeightShiftMonitor
 
         public Weight LeftSide { get; }
 
+        // convenience property for looping through weights
+        public Weight[] Weights { get; }
+
         public DateTime Timestamp { get; }
 
         public Reading(Weight frontSide
@@ -25,6 +28,13 @@ namespace Domain.Monitoring.WeightShiftMonitor
             RearSide = rearSide ?? throw new ArgumentNullException(nameof(rearSide));
             RightSide = rightSide ?? throw new ArgumentNullException(nameof(rightSide));
             LeftSide = leftSide ?? throw new ArgumentNullException(nameof(leftSide));
+
+            Weights = new Weight[4];
+            Weights[(int)Directions.Front] = FrontSide;
+            Weights[(int)Directions.Rear] = RearSide;
+            Weights[(int)Directions.Right] = RightSide;
+            Weights[(int)Directions.Left] = LeftSide;
+
             Timestamp = timestamp;
         }
 

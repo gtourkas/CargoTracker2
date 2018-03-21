@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using AutoFixture;
+using AutoFixture.Kernel;
 using Domain.Shipping.Cargo;
+using Domain.Tests.Shipping.Cargo.Infra;
 using Xunit;
 
 namespace Domain.Tests.Shipping.Cargo
@@ -8,36 +12,42 @@ namespace Domain.Tests.Shipping.Cargo
     public class ItineraryUnitTest
     {
         [Fact]
-        public void Ctor_NoLegs_ThrowsArgumentNullException()
+        public void Ctor__NoLegsGiven__ThrowsArgumentNullException()
         {
             Assert.Throws<ArgumentNullException>(() => new Itinerary(null));
         }
 
         [Fact]
-        public void Ctor_EmptyLegs_ThrowsArgumentException()
+        public void Ctor__EmptyLegsGiven__ThrowsArgumentException()
         {
             Assert.Throws<ArgumentException>(() => new Itinerary(new List<Leg>()));
         }
 
-        [Theory]
-        [AutoCargoData]
-        public void Ctor(List<Leg> legs)
+        [Fact]
+        public void Ctor()
         {
+            // ARRANGE
+            var legs = new List<Leg>(new Fixture().Customize(new DefaultLegCustomization()).CreateMany<Leg>());
+
             // ACT
             var itinerary = new Itinerary(legs);
 
             // ASSERT
-            Assert.Equal(legs[0].LoadLocation, itinerary.FirstLoadLocation);
-            Assert.Equal(legs[0].Voyage, itinerary.FirstYoyage);
+            var firstLeg = legs.First();
+            Assert.Equal(firstLeg.LoadLocation, itinerary.FirstLoadLocation);
+            Assert.Equal(firstLeg.Voyage, itinerary.FirstYoyage);
 
-            Assert.Equal(legs[legs.Count - 1].UnloadLocation, itinerary.LastUnloadLocation);
-            Assert.Equal(legs[legs.Count - 1].UnloadTime, itinerary.FinalArrivalDate);
+            var lastLeg = legs.Last();
+            Assert.Equal(lastLeg.UnloadLocation, itinerary.LastUnloadLocation);
+            Assert.Equal(lastLeg.UnloadTime, itinerary.FinalArrivalDate);
         }
 
-        [Theory]
-        [AutoCargoData]
-        public void IsExpected_NoEvent_ReturnsTrue(Itinerary sut)
+        [Fact]
+        public void IsExpected__NoEventGiven__ReturnsTrue()
         {
+            // ARRANGE
+            var sut = new Fixture().Customize(new DefaultItineraryCustomization()).Create<Itinerary>();
+
             // ACT
             var r = sut.IsExpected(null);
 
@@ -45,15 +55,53 @@ namespace Domain.Tests.Shipping.Cargo
             Assert.True(r);
         }
 
-        [Theory]
-        [AutoCargoData]
-        public void IsExpected_ReceiveEventAtFirstLoadingLocation_ReturnsTrue(Itinerary sut
-            , HandlingEvent @event)
+        [Fact]
+        public void IsExpected__ReceiveEventGiven_AtFirstLoadingLocation__ReturnsTrue()
         {
             // ARRANGE
-            @event = @event
-                .RecreateWith(HandlingType.Load)
-                .RecreateWith(sut.FirstLoadLocation);
+            var sut = new Fixture().Customize(new DefaultItineraryCustomization()).Create<Itinerary>();
+
+            var eventFixture = new Fixture();
+            eventFixture.Customizations.Add(new HandlingEventBuilder().With(HandlingType.Load).With(sut.FirstLoadLocation));
+            var @event = eventFixture.Create<HandlingEvent>();
+
+            // ACT
+            var r = sut.IsExpected(@event);
+
+            // ASSERT
+            Assert.True(r);
+        }
+
+        [Fact]
+        public void IsExpected__LoadEventGiven_AtAnyLoadingLocation__ReturnsTrue()
+        {
+            // ARRANGE
+            var sut = new Fixture().Customize(new DefaultItineraryCustomization()).Create<Itinerary>();
+
+            var anyLoadingLocation = new List<Leg>(sut.Legs)[new Random().Next(0, sut.Legs.Count - 1)].LoadLocation;
+
+            var eventFixture = new Fixture();
+            eventFixture.Customizations.Add(new HandlingEventBuilder().With(HandlingType.Load).With(anyLoadingLocation));
+            var @event = eventFixture.Create<HandlingEvent>();
+
+            // ACT
+            var r = sut.IsExpected(@event);
+
+            // ASSERT
+            Assert.True(r);
+        }
+
+        [Fact]
+        public void IsExpected__UnLoadEventGiven_AtAnyUnLoadingLocation__ReturnsTrue()
+        {
+            // ARRANGE
+            var sut = new Fixture().Customize(new DefaultItineraryCustomization()).Create<Itinerary>();
+
+            var anyUnLoadingLocation = new List<Leg>(sut.Legs)[new Random().Next(0, sut.Legs.Count - 1)].UnloadLocation;
+
+            var eventFixture = new Fixture();
+            eventFixture.Customizations.Add(new HandlingEventBuilder().With(HandlingType.Unload).With(anyUnLoadingLocation));
+            var @event = eventFixture.Create<HandlingEvent>();
 
             // ACT
             var r = sut.IsExpected(@event);
@@ -63,61 +111,17 @@ namespace Domain.Tests.Shipping.Cargo
         }
 
         [Theory]
-        [AutoCargoData]
-        public void IsExpected_LoadEventAtALoadingLocation_ReturnsTrue(Itinerary sut
-            , HandlingEvent @event)
+        [InlineData(HandlingType.Claim)]
+        [InlineData(HandlingType.Customs)]
+        public void IsExpected__EventClaimsOrCustomGiven_AtFinalUnloadingLocation__ReturnsTrue(
+            HandlingType type)
         {
             // ARRANGE
-            var legs = new List<Leg>(sut.Legs);
+            var sut = new Fixture().Customize(new DefaultItineraryCustomization()).Create<Itinerary>();
 
-            foreach (var l in legs)
-            {
-                @event = @event
-                    .RecreateWith(HandlingType.Load)
-                    .RecreateWith(l.LoadLocation);
-
-                // ACT
-                var r = sut.IsExpected(@event);
-
-                // ASSERT
-                Assert.True(r);
-            }
-        }
-
-        [Theory]
-        [AutoCargoData]
-        public void IsExpected_LoadEventAtAUnloadingLocation_ReturnsTrue(Itinerary sut
-                , HandlingEvent @event)
-        {
-            // ARRANGE
-            var legs = new List<Leg>(sut.Legs);
-
-            foreach (var l in legs)
-            {
-                @event = @event
-                    .RecreateWith(HandlingType.Load)
-                    .RecreateWith(l.LoadLocation);
-
-                // ACT
-                var r = sut.IsExpected(@event);
-
-                // ASSERT
-                Assert.True(r);
-            }
-        }
-
-        [Theory]
-        [InlineAutoCargoData(HandlingType.Claim)]
-        [InlineAutoCargoData(HandlingType.Customs)]
-        public void IsExpected_ClaimsOrCustomEventAtAFinalUnloadingLocation_ReturnsTrue(
-            HandlingType type
-            , Itinerary sut
-            , HandlingEvent @event)
-        {
-            // ARRANGE
-            @event = @event
-                .RecreateWith(type)
-                .RecreateWith(sut.LastUnloadLocation);
+            var eventFixture = new Fixture();
+            eventFixture.Customizations.Add(new HandlingEventBuilder().With(type).With(sut.LastUnloadLocation));
+            var @event = eventFixture.Create<HandlingEvent>();
 
             // ACT
             var r = sut.IsExpected(@event);
@@ -126,10 +130,11 @@ namespace Domain.Tests.Shipping.Cargo
             Assert.True(r);
         }
 
-        [Theory]
-        [AutoCargoData]
-        public void NextOf_First_IsSecond(Itinerary sut)
+        [Fact]
+        public void NextOf__TheFirst__IsTheSecond()
         {
+            // ARRANGE
+            var sut = new Fixture().Customize(new DefaultItineraryCustomization()).Create<Itinerary>();
             var legs = new List<Leg>(sut.Legs);
 
             // ACT
@@ -139,12 +144,11 @@ namespace Domain.Tests.Shipping.Cargo
             Assert.Equal(legs[1], l);
         }
 
-        [Theory]
-        [AutoCargoData]
-        public void NextOf_Last_IsNoLeg(Itinerary sut)
+        [Fact]
+        public void NextOf__Last__IsNoLeg()
         {
             // ARRANGE
-            var legs = new List<Leg>(sut.Legs);
+            var sut = new Fixture().Customize(new DefaultItineraryCustomization()).Create<Itinerary>();
 
             // ACT
             var l = sut.NextOf(sut.LastUnloadLocation);
@@ -153,17 +157,15 @@ namespace Domain.Tests.Shipping.Cargo
             Assert.Null(l);
         }
 
-        [Theory]
-        [AutoCargoData]
-        public void Of(Itinerary sut)
+        [Fact]
+        public void Of()
         {
             // ARRANGE
+            var sut = new Fixture().Customize(new DefaultItineraryCustomization()).Create<Itinerary>();
             var legs = new List<Leg>(sut.Legs);
 
-            for (var i = 0; i < legs.Count; i++)
+            foreach (var l in legs)
             {
-                var l = legs[i];
-
                 // ACT
                 var r1 = sut.Of(l.LoadLocation);
                 var r2 = sut.Of(l.UnloadLocation);

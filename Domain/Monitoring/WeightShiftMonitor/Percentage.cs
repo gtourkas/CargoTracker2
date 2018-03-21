@@ -14,7 +14,7 @@ namespace Domain.Monitoring.WeightShiftMonitor
             Value = value;
         }
 
-        public bool GreaterThan(Percentage perc)
+        public bool GreaterThan(PercentageOffset perc)
         {
             return this.Value > perc.Value;
         }

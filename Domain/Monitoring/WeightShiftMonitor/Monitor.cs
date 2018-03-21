@@ -9,38 +9,39 @@ namespace Domain.Monitoring.WeightShiftMonitor
 
         public Specification Specification { get; }
 
-        public Reading LastReading { get; private set; }
+        public Reading InitialReading { get; }
 
         public bool AlarmStarted { get; private set; }
 
-        public Monitor(ContainerId containerId, Specification spec)
+        public Monitor(ContainerId containerId, Specification spec, Reading initialReading)
         {
             ContainerId = containerId ?? throw new ArgumentNullException(nameof(containerId));
             Specification = spec ?? throw new ArgumentNullException(nameof(spec));
+            InitialReading = initialReading ?? throw new ArgumentNullException(nameof(initialReading));
         }
 
         // rehydration ctor
-        public Monitor(ContainerId containerId, Specification spec, Reading lastReading, bool alarmStarted)
+        public Monitor(ContainerId containerId, Specification spec, Reading initialReading, bool alarmStarted)
         {
             ContainerId = containerId;
             Specification = spec;
-            LastReading = lastReading;
+            InitialReading = initialReading;
             AlarmStarted = alarmStarted;
         }
 
         public void Check(Reading reading)
         {
-            if (LastReading == null)
-                return;
-
-            var shift = LastReading.CalcShift(reading);
+            var shift = InitialReading.CalcShift(reading);
 
             // greater than spec perc, start the alarm if not already
-            if (shift.PercOfLargestShift.GreaterThan(Specification.Percentage)  && !AlarmStarted)
+            if (shift.PercOfLargestShift.GreaterThan(Specification.Percentage))
             {
-                AlarmStarted = true;
+                if (!AlarmStarted)
+                {
+                    AlarmStarted = true;
 
-                this.Events.Add(new AlarmStarted(ContainerId, LastReading, shift.PercOfLargestShift, shift.DirOfLargestShift));
+                    this.Events.Add(new AlarmStarted(ContainerId, reading, shift.PercOfLargestShift, shift.DirOfLargestShift));
+                }
             }
             // less than spec perc
             else
@@ -50,11 +51,9 @@ namespace Domain.Monitoring.WeightShiftMonitor
                 {
                     AlarmStarted = false;
 
-                    this.Events.Add(new AlarmStopped(ContainerId, LastReading));
+                    this.Events.Add(new AlarmStopped(ContainerId, reading));
                 }
             }
-
-            LastReading = reading;
         }
 
     }

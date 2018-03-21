@@ -54,7 +54,7 @@ namespace Domain.Monitoring.TempRangeMonitor
                 {
                     AlarmStarted = true;
 
-                    this.Events.Add(new AlarmStarted(ContainerId, LastReading));
+                    this.Events.Add(new AlarmStarted(ContainerId, reading));
                 }
             }
             // in range
@@ -65,7 +65,9 @@ namespace Domain.Monitoring.TempRangeMonitor
                 {
                     AlarmStarted = false;
 
-                    this.Events.Add(new AlarmStopped(ContainerId, LastReading));
+                    this.Events.Add(new AlarmStopped(ContainerId, reading));
+
+                    ConsecOutOfRangeReadings.Clear();
                 }
             }
 
