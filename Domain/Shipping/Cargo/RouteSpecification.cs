@@ -3,7 +3,14 @@ using Domain.Shipping.Location;
 
 namespace Domain.Shipping.Cargo
 {
-    public class RouteSpecification 
+    // Value Object
+    public interface IRouteSpecification
+    {
+        bool IsSatisfiedBy(IItinerary itinerary);
+        UnLocode Destination { get; }
+    }
+
+    public class RouteSpecification : IRouteSpecification
     {
         public UnLocode Origin { get; private set; }
 
@@ -24,7 +31,7 @@ namespace Domain.Shipping.Cargo
             ArrivalDeadline = arrivalDeadline;
         }
 
-        public bool IsSatisfiedBy(Itinerary itinerary)
+        public bool IsSatisfiedBy(IItinerary itinerary)
         {
             return itinerary.FirstLoadLocation.Equals(Origin)
                 &&

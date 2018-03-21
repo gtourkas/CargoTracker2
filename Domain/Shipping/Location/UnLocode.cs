@@ -3,7 +3,7 @@ using System.Text.RegularExpressions;
 
 namespace Domain.Shipping.Location
 {
-    public class UnLocode 
+    public class UnLocode : IEquatable<UnLocode>
     {
         private static readonly Regex _pattern = new Regex("[a-zA-Z]{2}[a-zA-Z2-9]{3}"
             , RegexOptions.Compiled | RegexOptions.CultureInvariant);
@@ -21,5 +21,12 @@ namespace Domain.Shipping.Location
 
         public string Value { get; private set; }
 
+        public bool Equals(UnLocode other)
+        {
+            if (other == null)
+                return false;
+
+            return other.Value.Equals(this.Value);
+        }
     }
 }

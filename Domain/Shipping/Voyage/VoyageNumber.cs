@@ -2,7 +2,7 @@
 
 namespace Domain.Shipping.Voyage
 {
-    public class VoyageNumber
+    public class VoyageNumber : IEquatable<VoyageNumber>
     {
         public string Value { get; private set; }
 
@@ -11,5 +11,12 @@ namespace Domain.Shipping.Voyage
             Value = value ?? throw new ArgumentNullException("value");
         }
 
+        public bool Equals(VoyageNumber other)
+        {
+            if (other == null)
+                return false;
+
+            return Value.Equals(other.Value);
+        }
     }
 }

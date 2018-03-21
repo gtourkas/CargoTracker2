@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using AutoFixture;
 using AutoFixture.Xunit2;
 using Domain.Monitoring.TempRangeMonitor;
-using Domain.Tests.Monitoring.TempRangeMonitor.Infra;
 using FluentAssertions;
 using Xunit;
 
@@ -14,12 +12,9 @@ namespace Domain.Tests.Monitoring.TempRangeMonitor
     public class ReadingsCollectionUnitTest
     {
         [Theory]
-        [AutoData]
-        public void Add__NoOtherItemsExist__ItemAdded_and_DurationIsZero(ReadingsCollection sut)
+        [AutoReadingData]
+        public void Add__NoOtherItems__ItemAdded_and_DurationIsZero(ReadingsCollection sut, Reading reading)
         {
-            // ARRANGE
-            var reading = new Fixture().Customize(new DefaultTempCustomization()).Create<Reading>();
-
             // ACT
             sut.Add(reading);
 
@@ -29,14 +24,10 @@ namespace Domain.Tests.Monitoring.TempRangeMonitor
         }
 
         [Theory]
-        [AutoData]
-        public void Add__OtherItemsExist__ItemAdded_and_DurationSumsToItemsTimeDiff(ReadingsCollection sut)
+        [AutoReadingData]
+        public void Add__OtherItemsExist__ItemAdded_and_DurationSumsToItemsTimeDiff(ReadingsCollection sut, Reading current, Reading next)
         {
             // ARRANGE
-            var readingFixture = new Fixture().Customize(new DefaultTempCustomization());
-            var current = readingFixture.Create<Reading>();
-            var next = readingFixture.Create<Reading>();
-
             sut.Add(current);
 
             // ACT
@@ -48,13 +39,10 @@ namespace Domain.Tests.Monitoring.TempRangeMonitor
         }
 
         [Theory]
-        [AutoData]
-        public void Clear__ItemsExist__ItemsCleared_and_DurationIsZero(ReadingsCollection sut)
+        [AutoReadingData]
+        public void Clear__ItemsExist__ItemsCleared_and_DurationIsZero(ReadingsCollection sut, Reading current, Reading next)
         {
             // ARRANGE
-            var readingFixture = new Fixture().Customize(new DefaultTempCustomization());
-            var current = readingFixture.Create<Reading>();
-            var next = readingFixture.Create<Reading>();
             sut.Add(current);
             sut.Add(next);
 

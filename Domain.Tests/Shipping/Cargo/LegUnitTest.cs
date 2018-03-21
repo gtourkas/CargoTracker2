@@ -10,8 +10,8 @@ namespace Domain.Tests.Shipping.Cargo
     public class LegUnitTest
     {
         [Theory]
-        [AutoData]
-        public void Ctor__NoVoyageGiven__ThrowsArgumentNullException(
+        [InlineAutoData]
+        public void Ctor_NoVoyage_ThrowsArgumentNullException(
             UnLocode loadLocation,
             UnLocode unloadLocation,
             DateTime loadTime,
@@ -22,8 +22,8 @@ namespace Domain.Tests.Shipping.Cargo
         }
 
         [Theory]
-        [AutoData]
-        public void Ctor__NoLoadLocationGiven__ThrowsArgumentNullException(
+        [InlineAutoData]
+        public void Ctor_NoLoadLocation_ThrowsArgumentNullException(
             VoyageNumber voyage,
             UnLocode unloadLocation,
             DateTime loadTime,
@@ -34,8 +34,8 @@ namespace Domain.Tests.Shipping.Cargo
         }
 
         [Theory]
-        [AutoData]
-        public void Ctor__NoUnLoadLocationGiven__ThrowsArgumentNullException(
+        [InlineAutoData]
+        public void Ctor_NoUnLoadLocation_ThrowsArgumentNullException(
             VoyageNumber voyage,
             UnLocode loadLocation,
             DateTime loadTime,
@@ -46,8 +46,8 @@ namespace Domain.Tests.Shipping.Cargo
         }
 
         [Theory]
-        [AutoData]
-        public void Ctor__UnLoadTimeGiven_IsEarlierThanLoadTime__ThrowsArgumentException(
+        [InlineAutoData]
+        public void Ctor_UnLoadTimeEarlierThanLoadTime_ThrowsArgumentException(
             VoyageNumber voyage,
             UnLocode loadLocation,
             UnLocode unloadLocation,

@@ -11,7 +11,7 @@ namespace Domain.Tests.Shipping.Cargo
     {
         [Theory]
         [AutoData]
-        public void Ctor__NoTrackingIdGiven__ThrowsArgumentNullException(
+        public void Ctor_NoTrackingId_ThrowsArgumentNullException(
             HandlingType type,
             UnLocode location,
             VoyageNumber voyage,
@@ -31,7 +31,7 @@ namespace Domain.Tests.Shipping.Cargo
 
         [Theory]
         [AutoData]
-        public void Ctor__NoLocationGiven__ThrowsArgumentNullException(
+        public void Ctor_NoLocation_ThrowsArgumentNullException(
             TrackingId trackingId,
             HandlingType type,
             VoyageNumber voyage,
@@ -52,7 +52,7 @@ namespace Domain.Tests.Shipping.Cargo
         [Theory]
         [InlineAutoData(HandlingType.Load)]
         [InlineAutoData(HandlingType.Unload)]
-        public void Ctor__UnloadOrLoadAndNoVoyage__ThrowsArgumentNullException(
+        public void Ctor_UnloadOrLoadAndNoVoyage_ThrowsArgumentNullException(
             HandlingType type,
             TrackingId trackingId,
             UnLocode location,

@@ -9,11 +9,11 @@ namespace Domain.Monitoring.WeightShiftMonitor.Events
 
         public Reading Reading { get; }
 
-        public PercentageOffset PercOfLargestShift { get; }
+        public Percentage PercOfLargestShift { get; }
 
         public Directions DirOfLargestShift { get; }
 
-        public AlarmStarted(ContainerId containerId, Reading reading, PercentageOffset percOfLargestShift, Directions dirOfLargestShift)
+        public AlarmStarted(ContainerId containerId, Reading reading, Percentage percOfLargestShift, Directions dirOfLargestShift)
         {
             ContainerId = containerId ?? throw new ArgumentNullException(nameof(containerId));
             Reading = reading ?? throw new ArgumentNullException(nameof(reading));

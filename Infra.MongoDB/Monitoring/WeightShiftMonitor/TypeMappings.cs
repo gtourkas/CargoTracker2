@@ -38,8 +38,7 @@ namespace Infra.MongoDB.Monitoring.WeightShiftMonitor
                 .ConstructUsing(s => new Domain_Monitor(
                         new ContainerId(s.ContainerId)
                         , new Specification(new Percentage(s.SpecificationPercentage))
-                        , null // TODO
-                        )
+                    )
                 )
                 .ForMember(d => d.Events, o => o.Ignore())
                 ;

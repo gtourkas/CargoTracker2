@@ -20,7 +20,7 @@ namespace Domain.Monitoring.TempRangeMonitor
             Items = items;
 
             TotalDuration = items.Count > 0 ? 
-                new Duration(items.Last().Timestamp.Subtract(items.First().Timestamp)) 
+                new Duration(items.First().Timestamp.Subtract(items.Last().Timestamp)) 
                     :
                 new Duration(TimeSpan.Zero);        
         }
