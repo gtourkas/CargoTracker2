@@ -13,7 +13,9 @@
 /._.gitignore
 /._README.md
 /Web/Web.v3.ncrunchproject
+/Infra.MongoDB.Tests/bin
 /Infra.MongoDB.Tests/obj
+/Infra.MongoDB/bin
 /Infra.MongoDB/obj
 /Infra.MongoDB/Infra.MongoDB.v3.ncrunchproject
 
@@ -21,15 +23,24 @@
 /Infra.MassTransit/obj
 /Infra.MassTransit/Infra.MassTransit.v3.ncrunchproject
 
+/Domain.Tests/bin
 /Domain.Tests/obj
 /Domain.Tests/Domain.Tests.v3.ncrunchproject
 
+/App.Vessel.Monitor.Host/bin
 /App.Vessel.Monitor.Host/obj
 /App.Vessel.Monitor.Host/App.Vessel.Monitor.Host.v3.ncrunchproject
+
+/App.Tests/bin
 /App.Tests/obj
+
+/Domain/bin
 /Domain/obj
+
 /Infra.MongoDB.Tests/Infra.MongoDB.Tests.v3.ncrunchproject.user
 /Infra.MongoDB.Tests/Infra.MongoDB.Tests.v3.ncrunchproject
 /Infra.MongoDB.Tests/Infra.MongoDB.Tests.csproj.user
+
+/App/bin
 /App/obj
 /App/App.v3.ncrunchproject
