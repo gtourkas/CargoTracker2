@@ -7,20 +7,7 @@ using Domain.Shipping.Voyage;
 
 namespace Domain.Shipping.Cargo
 {
-    public interface IItinerary
-    {
-        bool IsExpected(HandlingEvent @event);
-        UnLocode FirstLoadLocation { get; }
-        UnLocode LastUnloadLocation { get; }
-        DateTime FinalArrivalDate { get; }
-        VoyageNumber FirstYoyage { get; }
-        IReadOnlyCollection<Leg> Legs { get; }
-        Leg NextOf(UnLocode location);
-        Leg Of(UnLocode location);
-
-    }
-
-    public class Itinerary : IItinerary
+    public class Itinerary 
     {
         public IReadOnlyCollection<Leg> Legs { get; private set; }
 

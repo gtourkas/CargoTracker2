@@ -2,8 +2,10 @@
 using AutoFixture.Xunit2;
 using Domain.Shipping.Cargo;
 using Domain.Shipping.Cargo.Events;
+using Domain.Tests.Shipping.Cargo.Infra;
 using FluentAssertions;
 using Xunit;
+using AutoFixture;
 
 namespace Domain.Tests.Shipping.Cargo
 {
@@ -42,7 +44,7 @@ namespace Domain.Tests.Shipping.Cargo
             Assert.Equal(routeSpec, sut.Delivery.RouteSpec);
 
             sut.Events[0].Should().BeEquivalentTo(new NewBooked(trackingId, routeSpec));
-        }
+        }   
 
         [Theory]
         [AutoData]
@@ -54,12 +56,14 @@ namespace Domain.Tests.Shipping.Cargo
         }
 
         [Theory]
-        [AutoCargoData]
+        [AutoData]
         public void AssignToItinerary__EmitsAssignedToItineraryEvent_and_EmitsDeliveryStateChanged(
-            Domain.Shipping.Cargo.Cargo sut,
-            Itinerary itinerary
+            Domain.Shipping.Cargo.Cargo sut
         )
         {
+            // ARRANGE
+            var itinerary = new Fixture().Customize(new DefaultItineraryCustomization()).Create<Itinerary>();
+
             // ACT
             sut.AssignToItinerary(itinerary);
 
@@ -81,7 +85,7 @@ namespace Domain.Tests.Shipping.Cargo
         }
 
         [Theory]
-        [AutoCargoData]
+        [AutoData]
         public void ChangeRoute__EmitsAssignedToItineraryEvent_and_EmitsDeliveryStateChangedEvent(
             Domain.Shipping.Cargo.Cargo sut,
             RouteSpecification routeSpec
@@ -99,7 +103,7 @@ namespace Domain.Tests.Shipping.Cargo
         }
 
         [Theory]
-        [AutoCargoData]
+        [AutoData]
         public void RegisterHandlingEvent__EmitsHandlingEventRegisteredEvent_and_EmitsDeliveryStateChangedEvent(
             Domain.Shipping.Cargo.Cargo sut,
             HandlingEvent @event

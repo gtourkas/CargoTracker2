@@ -13,7 +13,7 @@ namespace Infra.MongoDB.Monitoring.WeightShiftMonitor
 
         public int SpecificationPercentage { get; set; }
 
-        public Reading LastReading { get; set; }
+        public Reading InitialReading { get; set; }
 
         public bool AlarmStarted { get; set; }
     }
