@@ -11,11 +11,11 @@ namespace Domain.Tests.Monitoring.TempRangeMonitor
 {
     public class RangeUnitTest
     {
-        [Theory]
-        [AutoData]
-        public void IsOut__TempOutRange__ReturnsTrue(Range sut)
+        [Fact]
+        public void IsOut__TempOutRange__ReturnsTrue()
         {
             // ARRANGE
+            var sut = new Fixture().Customize(new DefaultRangeCustomization()).Create<Range>();
             var temp = new Fixture().Customize(new RangeTempCustomization(Temp.MinValue, (int)sut.From.Value - 1)).Create<Temp>();
 
             // ACT
@@ -25,11 +25,11 @@ namespace Domain.Tests.Monitoring.TempRangeMonitor
             Assert.True(r);
         }
 
-        [Theory]
-        [AutoData]
-        public void IsOut__TempInRange__ReturnsFalse(Range sut)
+        [Fact]
+        public void IsOut__TempInRange__ReturnsFalse()
         {
             // ARRANGE
+            var sut = new Fixture().Customize(new DefaultRangeCustomization()).Create<Range>();
             var temp = new Fixture().Customize(new RangeTempCustomization((int)sut.From.Value, (int)sut.Till.Value)).Create<Temp>();
 
             // ACT
